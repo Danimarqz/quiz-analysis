@@ -15,10 +15,7 @@ def generate_report(df, outdir):
     outfile = os.path.join(outdir, 'informe_quizzes.xlsx')
     
     # Crear resumen de fallos promedio por examen
-    # Como df tiene porcentaje con '%', calculamos el promedio desde datos originales si hace falta
-    # Pero aquí simplificamos usando un grupo
-    df['fallos_porcentaje_num'] = df['porcentaje_fallos'].astype(float)
-    summary = df.groupby('examen')['fallos_porcentaje_num'].mean().reset_index()
+    summary = df.groupby('examen')['porcentaje_fallos'].astype(float).mean().reset_index()
     summary = (
     df.assign(
         pct_fallos=lambda d: d['porcentaje_fallos'].astype(float) / 100
@@ -31,7 +28,6 @@ def generate_report(df, outdir):
     )
     
     with pd.ExcelWriter(outfile, engine='xlsxwriter') as writer:
-        df.drop(columns=['fallos_porcentaje_num'], inplace=True)
         # Resumen
         summary.to_excel(writer, sheet_name='Resumen por Examen', index=False)
         worksheet_summary = writer.sheets['Resumen por Examen']
