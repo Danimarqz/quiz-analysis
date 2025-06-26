@@ -19,6 +19,7 @@ This project generates a detailed Excel report with statistics from Moodle quizz
 ---
 
 ## 📂 Project Structure
+```
 project/
 ├── main.py # Entry point
 ├── db.py # Database connection and query logic
@@ -27,7 +28,7 @@ project/
 ├── .env # Environment variables (DB credentials, output path)
 ├── requirements.txt # Python dependencies
 └── README.md # This file
-
+```
 ---
 
 ## ⚙️ Requirements
@@ -61,7 +62,7 @@ EXPORTS_DIR=/path/to/output/excel
 ```
 pip install -r requirements.txt
 ```
-
+---
 ## 🧪 Usage
 
 Run the script with:
@@ -69,14 +70,14 @@ Run the script with:
 python main.py
 ```
 The file informe_quizzes.xlsx will be saved in the directory specified by EXPORTS_DIR.
-
+---
 ## 📈 Output
 The generated Excel file contains:
 
 Summary per Quiz: Average failure percentage per quiz, with a column chart.
 
 Detail per Question: Per-question data including attempts, correct answers, penalties, and percentages — with filters and formatting applied.
-
+---
 ## 🎓 Use Cases
 Perfect for:
 
@@ -85,9 +86,9 @@ Teachers analyzing student performance across quiz versions
 Coordinators identifying problematic questions
 
 Institutions generating automated Moodle reports
-
+---
 ## 📝 License
 This project is licensed under the MIT License. You are free to use, modify, and distribute it.
-
+---
 🙌 Author
 Daniel Márquez — @Danimarqz
