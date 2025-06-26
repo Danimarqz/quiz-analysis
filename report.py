@@ -3,9 +3,12 @@ import pandas as pd
 
 def auto_adjust_column_width(writer, sheetname, df):
     worksheet = writer.sheets[sheetname]
-    for i, col in enumerate(df.columns):
-        max_len = max(df[col].astype(str).map(len).max(), len(col)) + 2
-        worksheet.set_column(i, i, max_len)
+    first_col_width = max(
+        df.iloc[:, 0].astype(str).map(len).max(),
+        len(df.columns[0])
+    )
+    # Un poco de margen extra
+    worksheet.set_column(0, 0, first_col_width + 2)
 
 def generate_report(df, outdir):
     os.makedirs(outdir, exist_ok=True)
@@ -16,7 +19,16 @@ def generate_report(df, outdir):
     # Pero aquí simplificamos usando un grupo
     df['fallos_porcentaje_num'] = df['porcentaje_fallos'].str.rstrip('%').astype(float)
     summary = df.groupby('examen')['fallos_porcentaje_num'].mean().reset_index()
-    summary.rename(columns={'fallos_porcentaje_num': 'pct_fallos_promedio'}, inplace=True)
+    summary = (
+    df.assign(
+        pct_fallos=lambda d: d['porcentaje_fallos'].str.rstrip('%').astype(float) / 100
+    )
+    .groupby('examen')['pct_fallos']
+    .mean()
+    .round(4)
+    .reset_index()
+    .rename(columns={'pct_fallos': 'fallos_promedio'})
+    )
     
     with pd.ExcelWriter(outfile, engine='xlsxwriter') as writer:
         # Resumen
@@ -33,12 +45,15 @@ def generate_report(df, outdir):
         # Añadir autofiltro a todas las columnas en detalle
         last_col = len(df.columns) - 1
         worksheet.autofilter(0, 0, len(df), last_col)
-        
         # Gráfico en resumen
         workbook  = writer.book
         worksheet_summary = writer.sheets['Resumen por Examen']
-        chart = workbook.add_chart({'type': 'column'})
+
+        chart = workbook.add_chart({'type': 'column'}) 
+        percent_fmt = workbook.add_format({'num_format': '0.00%'})
         
+        worksheet_summary.set_column(1, 1, None, percent_fmt)
+
         max_row = len(summary)
         chart.add_series({
             'name': '% Fallos promedio',
