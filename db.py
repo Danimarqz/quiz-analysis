@@ -15,8 +15,8 @@ def get_data():
       qs.veces_respondida  as intentos,
       qs.aciertos_completos as aciertos,
       qs.penalizaciones   AS fallos,
-      concat(ROUND(100.0 * qs.aciertos_completos / qs.veces_respondida, 2), '%') AS porcentaje_aciertos,
-      concat(ROUND(100.0 * qs.penalizaciones   / qs.veces_respondida, 2), '%') AS porcentaje_fallos,
+      ROUND(qs.aciertos_completos / qs.veces_respondida, 4) AS porcentaje_aciertos,
+      ROUND(qs.penalizaciones   / qs.veces_respondida, 4) AS porcentaje_fallos,
       qq.nota_media_global
     FROM vw_question_stats AS qs
     JOIN vw_quiz_stats    AS qq USING (examen)
