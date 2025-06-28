@@ -18,7 +18,7 @@ def generate_report(df, outdir):
     # Como df tiene porcentaje con '%', calculamos el promedio desde datos originales si hace falta
     # Pero aquí simplificamos usando un grupo
     df['fallos_porcentaje_num'] = df['porcentaje_fallos'].astype(float)
-    summary = df.groupby('examen')['fallos_porcentaje_num'].mean().reset_index()
+    df = df.sort_values(by=['examen', 'porcentaje_aciertos'], ascending=[True, True])
     summary = (
     df.assign(
         pct_fallos=lambda d: d['porcentaje_fallos'].astype(float) / 100
