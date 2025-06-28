@@ -31,7 +31,6 @@ def generate_report(df, outdir):
     )
     
     with pd.ExcelWriter(outfile, engine='xlsxwriter') as writer:
-        df.drop(columns=['fallos_porcentaje_num'], inplace=True)
         # Resumen
         summary.to_excel(writer, sheet_name='Resumen por Examen', index=False)
         worksheet_summary = writer.sheets['Resumen por Examen']
